@@ -1,5 +1,5 @@
 import "./App.css";
-import { useRef, useEffect, useState, useContext, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import Card, { CardItem } from "./components/atoms/card/Card";
 import { CardsItems } from "./components/molecules/cards/Cards";
 import { AppContainer } from "./style";
