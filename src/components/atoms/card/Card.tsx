@@ -3,8 +3,8 @@ import { CardContainer, CardContent } from "./styles";
 
 export interface CardItem {
   title: string;
-  description: string;
-  date?: string;
+  id: string;
+  date: number;
 }
 
 const Card: React.FC<CardItem> = (props) => {
@@ -12,7 +12,7 @@ const Card: React.FC<CardItem> = (props) => {
     <CardContainer>
       <CardContent>
         <div>{props.title}</div>
-        <div>{props.description}</div>
+        <div>{props.id}</div>
         <div>{props.date}</div>
       </CardContent>
     </CardContainer>

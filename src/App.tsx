@@ -1,15 +1,15 @@
-import "./App.css";
 import { useRef, useEffect, useState, useCallback } from "react";
 import Card, { CardItem } from "./components/atoms/card/Card";
 import { CardsItems } from "./components/molecules/cards/Cards";
 import { AppContainer } from "./style";
 import Select from "./components/atoms/card/select/Select";
+import { uuidv4 } from "./helpers/generator";
 
 function App() {
   const [isPaused, setPause] = useState<boolean>(false);
-  // const [groupBy, setGroupBy] = useState<string>("All");
   const [cards, setCards] = useState<CardsItems>([]);
-  const [filteredCards, setFilteredCards] = useState<CardsItems>([]);
+  const [groupKey, setGroupKey] = useState<string>('All');
+  const [filteredCards, setFilteredCards] = useState<CardsItems>(cards);
 
   const ws = useRef<any>(null);
 
@@ -23,7 +23,6 @@ function App() {
     const wsCurrent = ws.current;
     return () => {
       wsCurrent.close();
-      console.log("closeddd");
     };
   }, []);
   useEffect(() => {
@@ -34,31 +33,33 @@ function App() {
       setCards([
         ...cards,
         {
-          title: "new card",
-          description: message + Math.floor(Math.random() * 10),
+          title: message,
+          id: uuidv4(),
+          date: Date.now(),
         },
       ]);
-      setFilteredCards(cards);
     };
+    handleGrouping();
   }, [isPaused, cards]);
 
-  const handleGrouping = useCallback(
-    (groupName: string) => {
-      if (groupName === "All") {
+  useEffect(()=> {
+    handleGrouping()
+  },[groupKey])
+
+  const handleGrouping = useCallback(() => {
+      debugger
+      if (groupKey === "All") {
         setFilteredCards(cards);
       } else {
-        const res = cards.filter((card) =>
-          card.description.includes(groupName)
-        );
-        console.log("groupBy", groupName);
+        const res = cards.filter((card) => card.title.includes(groupKey));
         setFilteredCards(res);
       }
     },
-    [cards]
+    [cards, groupKey]
   );
 
   const onSelectGroup = (groupName: string) => {
-    handleGrouping(groupName);
+    setGroupKey(groupName);
   };
 
   return (
@@ -68,8 +69,8 @@ function App() {
       </button>
       <Select onSelect={onSelectGroup} />
       <AppContainer>
-        {filteredCards.map((card: CardItem, index) => (
-          <Card title={card.title} description={card.description} key={index} />
+        {filteredCards?.map((card: CardItem, index: number) => (
+          <Card title={card.title} id={card.id} date={card.date} key={index} />
         ))}
       </AppContainer>
     </div>
