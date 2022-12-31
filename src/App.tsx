@@ -4,6 +4,7 @@ import { CardsItems } from "./components/molecules/cards/Cards";
 import { AppContainer } from "./style";
 import Select from "./components/atoms/card/select/Select";
 import { uuidv4 } from "./helpers/generator";
+import useWebsocket from "./hooks/useWebsocket";
 
 function App() {
   const [isPaused, setPause] = useState<boolean>(false);
@@ -11,20 +12,8 @@ function App() {
   const [groupKey, setGroupKey] = useState<string>('All');
   const [filteredCards, setFilteredCards] = useState<CardsItems>(cards);
 
-  const ws = useRef<any>(null);
+  const ws = useWebsocket() //Custom hook for websocket 
 
-  useEffect(() => {
-    ws.current = new WebSocket(
-      "wss://demo.piesocket.com/v3/channel_123?api_key=VCXCEuvhGcBDP7XhiJJUDvR1e1D3eiVjgZ9VRiaV&notify_self"
-    );
-    ws.current.onopen = () => console.log("ws opened");
-    ws.current.onclose = () => console.log("ws closed");
-
-    const wsCurrent = ws.current;
-    return () => {
-      wsCurrent.close();
-    };
-  }, []);
   useEffect(() => {
     if (!ws.current) return;
     ws.current.onmessage = (e: MessageEvent) => {
