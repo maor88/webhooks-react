@@ -69,8 +69,8 @@ function App() {
       </button>
       <Select onSelect={onSelectGroup} />
       <AppContainer>
-        {filteredCards?.map((card: CardItem, index: number) => (
-          <Card title={card.title} id={card.id} date={card.date} key={index} />
+        {filteredCards?.map((card: CardItem) => (
+          <Card title={card.title} id={card.id} date={card.date} key={card.id} />
         ))}
       </AppContainer>
     </div>
